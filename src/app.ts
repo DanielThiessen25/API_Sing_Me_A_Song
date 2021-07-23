@@ -1,13 +1,12 @@
 import express from "express";
 import cors from "cors";
-import connection from "./database";
 
-import * as controller from "./controllers/controller";
+import * as controller from "./controllers/songController";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/recommendations", controller.sendOk);
+app.post("/recommendations", controller.sendOk);
 
 export default app;
