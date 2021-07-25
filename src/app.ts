@@ -9,5 +9,7 @@ app.use(express.json());
 
 app.post("/recommendations", songController.sendOk);
 app.post("/recommendations/:id/upvote", songController.upVote);
+app.post("/recommendations/:id/downvote", songController.downVote);
+app.get("/recommendations/random", songController.randomSelect);
 
 export default app;
