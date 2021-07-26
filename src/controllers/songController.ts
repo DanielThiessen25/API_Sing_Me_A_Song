@@ -45,10 +45,15 @@ async function downVote (req: Request, res: Response){
     }
 }
 
-    async function randomSelect (req:Request, res: Response){
+async function randomSelect (req:Request, res: Response){
     const select = await songService.randomSong();
     return res.send(select);
-
 }
 
-export { sendOk, upVote, downVote, randomSelect };
+async function listTop (req:Request, res: Response){
+    const list = await songService.topSongs(parseInt(req.params.amount));
+    console.log(list);
+    res.send(list);
+}
+
+export { sendOk, upVote, downVote, randomSelect, listTop };

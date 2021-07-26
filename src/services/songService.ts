@@ -73,6 +73,19 @@ async function randomSong(){
     }
 }
 
+async function topSongs (amount:number){
+    const songs =  await songRepository.selectAllSongs();
+    console.log(songs);
+    songs.sort(function compare(a,b) {
+        if (a.points < b.points)
+           return 1;
+        if (a.points > b.points)
+          return -1;
+        return 0;
+      });
+      let amountSongs = songs.slice(0, amount);
+      return amountSongs;
+}
 
 
-export { registerSong, upVoteSong, downVoteSong, randomSong };
+export { registerSong, upVoteSong, downVoteSong, randomSong, topSongs };
