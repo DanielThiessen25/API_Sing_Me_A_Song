@@ -53,7 +53,7 @@ async function randomSelect (req:Request, res: Response){
 async function listTop (req:Request, res: Response){
     const list = await songService.topSongs(parseInt(req.params.amount));
     console.log(list);
-    res.send(list);
+    return res.send(list);
 }
 
 export { sendOk, upVote, downVote, randomSelect, listTop };

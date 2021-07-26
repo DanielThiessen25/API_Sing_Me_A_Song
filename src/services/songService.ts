@@ -75,7 +75,6 @@ async function randomSong(){
 
 async function topSongs (amount:number){
     const songs =  await songRepository.selectAllSongs();
-    console.log(songs);
     songs.sort(function compare(a,b) {
         if (a.points < b.points)
            return 1;
