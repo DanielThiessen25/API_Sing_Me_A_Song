@@ -2,12 +2,14 @@ import connection from '../database';
 import * as songRepository from '../repositories/songRepository';
 
 async function registerSong(name: string, link: string) {
-    //testar regras do negocio
 
     if(!name || !link){
         return null;
     } 
-    //checar se o link é link do youtube
+    const isYoutube = link.search("www.youtube");
+    if(isYoutube === -1){
+        return null;
+    }
 
     else{
         const add = await songRepository.addRecommendations(name, link);

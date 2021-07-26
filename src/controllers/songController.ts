@@ -4,7 +4,7 @@ import * as songService from "../services/songService";
 
 async function sendOk(req: Request, res: Response) {
     const { name, youtubeLink } = req.body;
-	if (!req || !res) return res.sendStatus(400);
+	if (!req || !res) return res.sendStatus(401);
     else{
         const register = await songService.registerSong(name, youtubeLink);
         
@@ -24,7 +24,7 @@ async function upVote (req: Request, res: Response){
     else{
         const vote = await songService.upVoteSong(req.params.id);
         if(vote == null){
-            return res.sendStatus(401);
+            return res.sendStatus(404);
         }
         else{
             return res.sendStatus(200);
@@ -37,7 +37,7 @@ async function downVote (req: Request, res: Response){
     else{
         const vote = await songService.downVoteSong(req.params.id);
         if(vote == null){
-            return res.sendStatus(401);
+            return res.sendStatus(404);
         }
         else{
             return res.sendStatus(200);

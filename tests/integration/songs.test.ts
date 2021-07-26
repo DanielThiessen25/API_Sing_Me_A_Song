@@ -30,6 +30,18 @@ describe("POST /recommendations", () => {
     expect(result.status).toBe(200);
   });
 
+  it("returns status 401 if song recommendation is blank or not a youtube link", async()=>{
+    const result = await supertest(app).post("/recommendations").send({name: "test", youtubeLink:"https://www.google.com/"});
+    const result2 = await supertest(app).post("/recommendations").send({name:"", youtubeLink:""});
+    expect(result.status).toBe(401);
+    expect(result2.status).toBe(401);
+  });
+
+  it("returns 401 if it doesnt receive a request body", async()=>{
+    const result = await supertest(app).post("/recommendations");
+    expect(result.status).toBe(401);
+  });
+
 });
 
 describe("POST /recommendations/:id/upvote", () => {
@@ -42,6 +54,15 @@ describe("POST /recommendations/:id/upvote", () => {
     expect(afterVote.rows[0].points).toBe(beforeVote.rows[0].points + 1);
     expect(result.status).toBe(200);
   });
+
+  it("should return 404 if no song id is used in params", async ()=>{
+    await supertest(app).post("/recommendations").send(body);
+    await connection.query("SELECT * FROM songs WHERE id=1");
+    const result = await supertest(app).post("/recommendations//upvote");
+
+    expect(result.status).toBe(404);
+  });
+
 });
 
 describe("POST /recommendations/:id/downvote", () => {
@@ -55,6 +76,14 @@ describe("POST /recommendations/:id/downvote", () => {
     expect(result.status).toBe(200);
   });
 
+  it("should return 404 if no song id is used in params", async ()=>{
+    await supertest(app).post("/recommendations").send(body);
+    await connection.query("SELECT * FROM songs WHERE id=1");
+    const result = await supertest(app).post("/recommendations//downvote");
+
+    expect(result.status).toBe(404);
+  });
+
   it("should remove the song if score is less than -5 and return 200", async ()=>{
     await supertest(app).post("/recommendations").send(body);
     for(let i = 0; i<6; i++){
@@ -63,14 +92,14 @@ describe("POST /recommendations/:id/downvote", () => {
     const afterRemoval = await connection.query("SELECT * FROM songs");
     expect(afterRemoval.rows.length).toBe(0);
   });
+  
 });
 
 describe("get /recommendations/random", ()=>{
   it("should return a random song" , async () => {
     await supertest(app).post("/recommendations").send(body);
-    await supertest(app).post("/recommendations/upvote")
+    await supertest(app).post("/recommendations/upvote");
     const result = await supertest(app).get("/recommendations/random");
-    console.log(result);
     expect(result.body.id).toBe(1);
   });
 
